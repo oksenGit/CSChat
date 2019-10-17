@@ -1,3 +1,4 @@
+import 'package:cschat/ui/HomeScreen.dart';
 import 'package:cschat/ui/LoginScreen.dart';
 import 'package:cschat/ui/SignupScreen.dart';
 import 'package:cschat/ui/SplashScreen.dart';
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
         "/": (BuildContext context) => SplashScreen(),
         "/LoginScreen": (BuildContext context) => LoginScreen(),
         "/SignupScreen": (BuildContext context) => SignupScreen(),
+        "/HomeScreen": (BuildContext context) => HomeScreen(),
       },
     );
   }

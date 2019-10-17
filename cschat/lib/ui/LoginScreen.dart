@@ -1,6 +1,31 @@
+import 'package:cschat/bloc/AuthBloc.dart';
+import 'package:cschat/bloc/AuthEvent.dart';
+import 'package:cschat/bloc/AuthState.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailC = TextEditingController();
+
+  TextEditingController _passC = TextEditingController();
+
+  AuthBloc _authBloc = AuthBloc();
+
+
+  @override
+  void initState() {
+    _authBloc.authState.listen((AuthState state){
+      if(state is UserLoggedIn){
+        Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (r)=>false);
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +51,8 @@ class LoginScreen extends StatelessWidget {
               Form(
                 child: Column(
                   children: <Widget>[
-                    customTextField("Email"),
-                    customTextField("Password", obscure: true),
+                    customTextField("Email", _emailC),
+                    customTextField("Password", _passC,obscure: true),
                   ],
                 ),
               ),
@@ -36,13 +61,13 @@ class LoginScreen extends StatelessWidget {
                 children: <Widget>[
                   FlatButton(
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, "/SignupScreen", (r)=>false);
+                      Navigator.pushNamed(context, "/SignupScreen");
                     },
                     child: Text("Create Account"),
                   ),
                   RaisedButton(
                     onPressed: (){
-                      Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (r)=>false);
+                      _authBloc.dispatch(LoginClicked(_emailC.text,_passC.text));
                     },
                     child: Icon(Icons.navigate_next),
                     shape: CircleBorder(),
@@ -56,8 +81,9 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget customTextField(String hint, {bool obscure = false}) {
+  Widget customTextField(String hint, TextEditingController controller, {bool obscure = false}) {
     return TextField(
+    controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
         labelText: hint,
